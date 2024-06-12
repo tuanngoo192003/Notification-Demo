@@ -23,8 +23,7 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.RemoteInput;
 
 public class MainActivity extends AppCompatActivity {
-
-    public static final int NOTIFICATION_ID = 1;
+    public static int NOTIFICATION_ID = 1;
     public static final int NOTIFICATION_ID_2 = 2;
     public static final int NOTIFICATION_ID_3 = 3;
     public static final String CHANNEL_ID = "bearAppNChannel";
@@ -72,17 +71,18 @@ public class MainActivity extends AppCompatActivity {
                 .setContentTitle("From GauNgo")
                 .setContentText("Cute bear <3")
                 .setSmallIcon(R.drawable.bear_icon)
-                .setLargeIcon(bitmap)
+                .setLargeIcon(bitmap) //optional
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
+                .setGroup("group_key")
                 .setAutoCancel(true)
-                .setTimeoutAfter(5000); //5000milliseconds
+                .setTimeoutAfter(50000); //1000milliseconds = 1s
 
         Notification notification = nBuilder.build();
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             // notificationId is a unique int for each notification that you must define.
-            manager.notify(NOTIFICATION_ID, notification);
+            manager.notify(NOTIFICATION_ID++, notification);
         }
     }
 
@@ -147,12 +147,15 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "gauNgo";
             int importance = NotificationManager.IMPORTANCE_HIGH;
+
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+
             notificationChannel.enableLights(true);
             notificationChannel.setLightColor(Color.rgb(123, 211, 143));
             notificationChannel.enableVibration(true);
             notificationChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
             notificationChannel.setDescription("This is default channel used for all other notifications");
+
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(notificationChannel);
